@@ -8,6 +8,8 @@ type Aula = {
   id: number;
   titulo: string;
   conteudo: string;
+  pdf_url?: string;
+  video_url?: string;
   ordem: number;
 };
 
