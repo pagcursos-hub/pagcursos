@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lab Virtual Biologia - Histologia</title>
+    <style>
+        body { margin: 0; font-family: Arial; background: #f0f8ff; }
+        #lab { border: 2px solid #333; cursor: pointer; }
+        #info { padding: 10px; background: #e6f3ff; }
+        button { padding: 8px 16px; margin: 5px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h2>🧬 Laboratório Virtual de Histologia</h2>
+        <p>Observe a lâmina de epitélio colunar. Clique na célula para analisar.</p>
+        <button onclick="zoomIn()">🔍 Aumentar (40x → 400x)</button>
+        <button onclick="resetView()">🔄 Reset</button>
+        <span id="resultado"></span>
+    </div>
+    <canvas id="lab" width="900" height="500"></canvas>
+
+    <script>
+        const canvas = document.getElementById('lab');
+        const ctx = canvas.getContext('2d');
+        const resultado = document.getElementById('resultado');
+        
+        let zoom = 1;
+        let posX = 0;
+
+        function desenharLamida() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Fundo da lâmina
+            ctx.fillStyle = '#90EE90'; 
+            ctx.fillRect(50 + posX, 50, 800 * zoom, 400 * zoom);
+            
+            // Células epiteliais colunares
+            for(let i = 0; i < 5; i++) {
+                // Citoplasma
+                ctx.fillStyle = '#F0F8FF'; 
+                ctx.fillRect(100 + i*150 + posX, 100, 120 * zoom, 300 * zoom);
+                
+                // Núcleo (básico-cromatina)
+                ctx.fillStyle = '#8B4513'; 
+                ctx.beginPath();
+                ctx.arc(160 + i*150 + posX, 200, 35 * zoom, 0, Math.PI*2);
+                ctx.fill();
+                
+                // Cílios (ápice)
+                ctx.strokeStyle = '#4682B4';
+                ctx.lineWidth = 2;
+                for(let j = 0; j < 8; j++) {
+                    ctx.beginPath();
+                    ctx.moveTo(160 + i*150 + posX + (j-4)*8, 80);
+                    ctx.lineTo(160 + i*150 + posX + (j-4)*8, 60);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        function zoomIn() {
+            zoom = Math.min(zoom + 0.5, 3);
+            desenharLamida();
+            resultado.textContent = `Aumento: ${zoom*100}x`;
+        }
+
+        function resetView() {
+            zoom = 1;
+            posX = 0;
+            resultado.textContent = '';
+            desenharLamida();
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            if(x > 100 && x < 800) {
+                resultado.innerHTML = '✅ <strong>Análise completa:</strong> Epitélio colunar simples com cílios. Função: absorção e secreção.';
+                resultado.style.color = '#006400';
+            }
+        });
+
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            posX += e.deltaX * 0.5;
+            desenharLamida();
+        });
+
+        desenharLamida(); // Inicial
+    </script>
+</body>
+</html>
