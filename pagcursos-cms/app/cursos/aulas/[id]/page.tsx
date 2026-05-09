@@ -112,15 +112,15 @@ if (pdf) {
 
         
 <input
-  type="number"
-  placeholder="Ordem da aula"
-  <input
   type="text"
   placeholder="Link do vídeo"
   value={videoUrl}
   onChange={(e) => setVideoUrl(e.target.value)}
   className="w-full p-4 rounded-xl bg-slate-800"
 />
+ <input
+  type="number"
+  placeholder="Ordem da aula"
   value={ordem}
   onChange={(e) => setOrdem(e.target.value)}
   className="w-full p-4 rounded-xl bg-slate-800"
